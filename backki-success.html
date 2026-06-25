@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BackKI – Zahlung erfolgreich</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Inter:wght@400;500;600&display=swap');
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: #1A120A;
+  color: #F9F3E8;
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 20px;
+}
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(184,114,42,0.25);
+  border-radius: 20px;
+  padding: 52px 44px;
+  max-width: 520px; width: 100%;
+  text-align: center;
+}
+.icon { font-size: 64px; margin-bottom: 24px; }
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 16px; font-weight: 700;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 32px; letter-spacing: -0.3px;
+}
+.logo em { color: #B8722A; font-style: normal; }
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: 32px; font-weight: 900;
+  color: #fff; margin-bottom: 12px; line-height: 1.1;
+}
+.sub {
+  font-size: 15px; color: rgba(255,255,255,0.5);
+  line-height: 1.7; margin-bottom: 36px;
+}
+.steps {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px; padding: 24px;
+  text-align: left; margin-bottom: 32px;
+}
+.step {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #B8722A; color: #fff;
+  font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.step-text b { color: #fff; }
+.email-box {
+  background: #B8722A; border-radius: 10px;
+  padding: 14px 20px; margin-bottom: 28px;
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  line-height: 1.6;
+}
+.email-box strong {
+  display: block; font-size: 17px; font-weight: 700;
+  color: #fff; margin: 6px 0 2px;
+}
+.demo-btn {
+  display: inline-block;
+  background: transparent;
+  border: 1.5px solid rgba(184,114,42,0.5);
+  color: rgba(255,255,255,0.6);
+  padding: 12px 28px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.demo-btn:hover {
+  border-color: #B8722A; color: #fff;
+}
+.session-id {
+  margin-top: 28px;
+  font-size: 11px; color: rgba(255,255,255,0.2);
+  font-family: monospace;
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Back<em>KI</em></div>
+  <div class="icon">✅</div>
+  <h1>Zahlung erfolgreich!</h1>
+  <p class="sub">Vielen Dank für Ihre Bestellung. Ihr persönlicher Analyse-Report ist jetzt in Arbeit.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text"><b>Kassenexport senden</b><br>Schicken Sie Ihre Kassendaten-Datei (CSV, Excel oder DSFinV-K) per E-Mail an uns.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text"><b>KI analysiert Ihre Daten</b><br>Unsere KI wertet alle Produkte, Wochentage und Saisonmuster aus.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text"><b>Report in 24 Stunden</b><br>Sie erhalten den PDF-Report an die E-Mail-Adresse Ihrer Bestellung.</div>
+    </div>
+  </div>
+
+  <div class="email-box">
+    Kassenexport senden an:
+    <strong>report@backki.de</strong>
+    Betreff: Mein Kassenexport
+  </div>
+
+  <a href="baeckerei-bedarfsplaner.html" class="demo-btn">
+    In der Zwischenzeit: Demo erkunden →
+  </a>
+
+  <div class="session-id" id="session-id"></div>
+</div>
+
+<script>
+// Session-ID aus URL lesen und anzeigen (für Support-Anfragen)
+var params = new URLSearchParams(window.location.search);
+var sid = params.get('session_id');
+if (sid) {
+  document.getElementById('session-id').textContent = 'Referenz: ' + sid;
+}
+
+// Supabase: Lead als bezahlt markieren (wenn session_id übergeben)
+if (sid) {
+  var SUPA_URL = 'https://ysqzdqazcgyuzdorauiq.supabase.co';
+  var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcXpkcWF6Y2d5dXpkb3JhdWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODM0NzcsImV4cCI6MjA5NTU1OTQ3N30.u5cbSVniUl5Zvlf2rdpnjtvDyKvv9csmPwvdtnEwWzE';
+  // Stripe session_id im Lead speichern
+  // (paid=true wird idealerweise per Webhook gesetzt — hier als Fallback)
+  fetch(SUPA_URL + '/rest/v1/backki_leads?stripe_session_id=eq.' + encodeURIComponent(sid), {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY
+    },
+    body: JSON.stringify({ paid: true, paid_at: new Date().toISOString() })
+  }).catch(function() {});
+}
+</script>
+</body>
+</html>
