@@ -58,6 +58,44 @@ nav {
 }
 .nav-cta:hover { background: var(--crust-l); }
 
+
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  animation: bob 2s ease-in-out infinite;
+  text-decoration: none;
+}
+.scroll-hint:hover { opacity: 1; }
+.scroll-hint-text {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--crust);
+  white-space: nowrap;
+}
+.scroll-hint-arrow {
+  width: 28px; height: 28px;
+  border: 1.5px solid rgba(192,122,46,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: var(--crust);
+}
+@keyframes bob {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(6px); }
+}
+
 /* ── HERO ── */
 .hero {
   background: var(--ink);
@@ -594,6 +632,32 @@ footer {
   nav { padding: 14px 20px; }
   .section { padding: 60px 20px; }
 }
+
+.scroll-hint {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  cursor: pointer; text-decoration: none;
+  animation: bob 2s ease-in-out infinite;
+}
+.scroll-hint-text {
+  font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--crust); white-space: nowrap;
+}
+.scroll-hint-arrow {
+  width: 28px; height: 28px;
+  border: 1.5px solid rgba(192,122,46,0.5);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--crust);
+}
+@keyframes bob {
+  0%,100% { transform: translateX(-50%) translateY(0); }
+  50%      { transform: translateX(-50%) translateY(7px); }
+}
+
 </style>
 </head>
 <body>
@@ -655,6 +719,10 @@ footer {
       <div class="hc-note">Einmalig · Keine Kreditkarte nötig (PayPal / Überweisung)</div>
     </div>
   </div>
+  <a href="#wie" class="scroll-hint">
+    <div class="scroll-hint-text">Lies die ganze Geschichte</div>
+    <div class="scroll-hint-arrow">↓</div>
+  </a>
 </section>
 
 <!-- SCHMERZ -->
@@ -1038,24 +1106,15 @@ function submitGate() {
   btn.disabled = true;
   btn.textContent = 'Einen Moment …';
 
-  // Schritt 1: Lead in Supabase speichern
-  fetch(SUPA_URL + '/rest/v1/backki_leads', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY, 'Prefer': 'return=representation' },
-    body: JSON.stringify({ name: name || null, email: email, bakery: bakery || null, source: 'report_order_v2', notes: kasse ? ('Kasse: ' + kasse) : null })
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    var leadId = (data && data[0]) ? data[0].id : null;
-    btn.textContent = 'Weiter zur sicheren Zahlung …';
-    // Schritt 2: Stripe Checkout Session via Supabase Edge Function
+  // Direkt zur Edge Function — kein separater Supabase-Insert
+  btn.textContent = 'Weiter zur sicheren Zahlung …';
+  Promise.resolve()
+  .then(function() {
     return fetch(SUPA_URL + '/functions/v1/backki-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
       body: JSON.stringify({
-        email: email, name: name, bakery: bakery, lead_id: leadId,
-        success_url: window.location.origin + '/backki-success.html?session_id={CHECKOUT_SESSION_ID}',
-        cancel_url:  window.location.href.split('#')[0] + '#report'
+        email: email, name: name, bakery: bakery, kasse: kasse, lead_id: ''
       })
     });
   })
