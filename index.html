@@ -634,11 +634,9 @@ footer {
 }
 
 .scroll-hint {
-  position: absolute;
-  bottom: 28px; left: 50%;
-  transform: translateX(-50%);
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   cursor: pointer; text-decoration: none;
+  margin-top: 40px;
   animation: bob 2s ease-in-out infinite;
 }
 .scroll-hint-text {
@@ -675,7 +673,11 @@ footer {
       <p class="hero-tag">Bäckerei-Analyse · Deutschland</p>
       <h1>Wie viel wirft Ihre Bäckerei <em>wirklich</em> weg?</h1>
       <p class="hero-sub">Wir analysieren Ihren Kassenexport und zeigen Ihnen in 24 Stunden schwarz auf weiß: welche Produkte Sie zu viel backen — und was das kostet.</p>
-      <div class="hero-proof">
+      <a href="#wie" class="scroll-hint" style="margin-top:32px; justify-content:flex-start;">
+      <div class="scroll-hint-text">Lies die ganze Geschichte</div>
+      <div class="scroll-hint-arrow">↓</div>
+    </a>
+    <div class="hero-proof" style="margin-top:16px;">
         <div class="hero-proof-dot"></div>
         <span>Einmalig 29 € · Kein Abo · Ergebnis in 24 Stunden</span>
       </div>
@@ -719,10 +721,6 @@ footer {
       <div class="hc-note">Einmalig · Keine Kreditkarte nötig (PayPal / Überweisung)</div>
     </div>
   </div>
-  <a href="#wie" class="scroll-hint">
-    <div class="scroll-hint-text">Lies die ganze Geschichte</div>
-    <div class="scroll-hint-arrow">↓</div>
-  </a>
 </section>
 
 <!-- SCHMERZ -->
@@ -752,7 +750,7 @@ footer {
 </section>
 
 <!-- WIE ES FUNKTIONIERT -->
-<section class="section section-alt" id="wie">
+<section class="section section-alt" id="wie" style="scroll-margin-top: 60px;">
   <div class="container">
     <p class="eyebrow">So einfach geht's</p>
     <h2 class="section-h">Drei Schritte.<br>Kein IT-Aufwand.</h2>
