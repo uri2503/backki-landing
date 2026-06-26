@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BackKI · Kommandozentrale</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0F0A05;
+  --surface: #1A1108;
+  --card:    #221709;
+  --border:  #2E1F0A;
+  --border2: #3D2B0F;
+  --crust:   #C07A2E;
+  --cream:   #F2E8D5;
+  --smoke:   #7A6A52;
+  --green:   #3DB870;
+  --red:     #E05A4A;
+  --amber:   #E0A030;
+  --blue:    #4A90D9;
+  --white:   #F9F3E8;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--cream);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex; align-items: center; height: 52px;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 900; color: var(--white); }
+.logo em { color: var(--crust); font-style: normal; }
+.header-badge {
+  margin-left: 10px; font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px; color: var(--crust);
+  border: 1px solid var(--border2); padding: 2px 8px; border-radius: 20px;
+}
+.header-right { margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.live-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green); box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.last-update { font-size: 11px; color: var(--smoke); font-family: 'JetBrains Mono', monospace; }
+.refresh-btn {
+  background: var(--border); border: 1px solid var(--border2); color: var(--smoke);
+  padding: 5px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;
+  font-family: 'Inter', sans-serif; transition: all 0.2s;
+}
+.refresh-btn:hover { color: var(--white); border-color: var(--crust); }
+
+.main { max-width: 1400px; margin: 0 auto; padding: 24px 28px; }
+
+.kpi-grid {
+  display: grid; grid-template-columns: repeat(6,1fr); gap: 12px; margin-bottom: 24px;
+}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+
+.kpi {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 16px 18px; position: relative; overflow: hidden;
+}
+.kpi::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.kpi.k-leads::before   { background: var(--blue); }
+.kpi.k-demo::before    { background: var(--amber); }
+.kpi.k-paid::before    { background: var(--green); }
+.kpi.k-revenue::before { background: var(--crust); }
+.kpi.k-rating::before  { background: var(--green); }
+.kpi.k-fb::before      { background: var(--blue); }
+
+.kpi-label { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:var(--smoke); margin-bottom:8px; }
+.kpi-val { font-family:'Fraunces',serif; font-size:34px; font-weight:900; line-height:1; color:var(--white); }
+.kpi-val.green { color: var(--green); }
+.kpi-val.amber { color: var(--amber); }
+.kpi-val.crust { color: var(--crust); }
+.kpi-sub { font-size:11px; color:var(--smoke); margin-top:4px; }
+
+.panel-grid { display:grid; grid-template-columns:1fr 360px; gap:16px; margin-bottom:16px; }
+@media(max-width:900px){.panel-grid{grid-template-columns:1fr}}
+
+.panel { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.panel-head {
+  padding:14px 18px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.panel-title { font-size:12px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:.8px; }
+.panel-count { font-size:11px; color:var(--smoke); font-family:'JetBrains Mono',monospace; }
+
+.leads-table { width:100%; border-collapse:collapse; }
+.leads-table th {
+  text-align:left; font-size:10px; font-weight:600; text-transform:uppercase;
+  letter-spacing:.8px; color:var(--smoke); padding:10px 16px;
+  border-bottom:1px solid var(--border); background:var(--surface);
+}
+.leads-table td {
+  padding:11px 16px; border-bottom:1px solid var(--border);
+  font-size:12px; vertical-align:middle;
+}
+.leads-table tr:last-child td { border-bottom:none; }
+.leads-table tr:hover td { background:rgba(192,122,46,.04); }
+
+.badge {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px;
+  text-transform:uppercase; letter-spacing:.3px;
+}
+.badge-green { background:rgba(61,184,112,.15); color:var(--green); }
+.badge-amber { background:rgba(224,160,48,.15); color:var(--amber); }
+.badge-blue  { background:rgba(74,144,217,.15); color:var(--blue); }
+.badge-smoke { background:rgba(122,106,82,.15); color:var(--smoke); }
+
+.mono { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--smoke); }
+
+.fb-item { padding:14px 18px; border-bottom:1px solid var(--border); }
+.fb-item:last-child { border-bottom:none; }
+.fb-stars { display:flex; gap:3px; margin-bottom:4px; }
+.star { font-size:13px; }
+.star.on  { color:var(--crust); }
+.star.off { color:var(--border2); }
+.fb-meta { font-size:11px; color:var(--smoke); margin-bottom:6px; }
+.fb-answer { font-size:12px; color:var(--cream); background:var(--surface); border-radius:6px; padding:6px 10px; margin-top:6px; }
+.fb-comment { font-size:11px; color:var(--smoke); font-style:italic; margin-top:6px; line-height:1.5; }
+
+.funnel-row { display:flex; align-items:center; gap:14px; padding:12px 18px; border-bottom:1px solid var(--border); }
+.funnel-row:last-child { border-bottom:none; }
+.funnel-label { font-size:12px; color:var(--cream); width:170px; flex-shrink:0; }
+.funnel-bar-wrap { flex:1; }
+.funnel-bar { height:6px; border-radius:3px; background:var(--border); overflow:hidden; }
+.funnel-fill { height:100%; border-radius:3px; transition:width .8s ease; }
+.funnel-num { font-family:'Fraunces',serif; font-size:18px; font-weight:700; width:40px; text-align:right; flex-shrink:0; }
+.funnel-pct { font-size:11px; color:var(--smoke); width:44px; text-align:right; flex-shrink:0; }
+
+.bottom-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:700px){.bottom-grid{grid-template-columns:1fr}}
+
+.empty { padding:40px 20px; text-align:center; color:var(--smoke); }
+.empty-icon { font-size:32px; margin-bottom:10px; }
+.empty-text { font-size:13px; }
+
+.loading { display:flex; align-items:center; justify-content:center; padding:40px; color:var(--smoke); font-size:12px; gap:10px; }
+.spinner { width:16px; height:16px; border:2px solid var(--border2); border-top-color:var(--crust); border-radius:50%; animation:spin .7s linear infinite; }
+@keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Back<em>KI</em></div>
+  <div class="header-badge">Kommandozentrale</div>
+  <div class="header-right">
+    <div class="live-dot"></div>
+    <div class="last-update" id="last-update">–</div>
+    <button class="refresh-btn" onclick="loadAll()">↺ Aktualisieren</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="kpi-grid">
+    <div class="kpi k-leads">
+      <div class="kpi-label">Leads gesamt</div>
+      <div class="kpi-val" id="k-leads">–</div>
+      <div class="kpi-sub" id="k-leads-sub">– heute</div>
+    </div>
+    <div class="kpi k-demo">
+      <div class="kpi-label">Demo geöffnet</div>
+      <div class="kpi-val amber" id="k-demo">–</div>
+      <div class="kpi-sub" id="k-demo-sub">– % der Leads</div>
+    </div>
+    <div class="kpi k-paid">
+      <div class="kpi-label">Reports verkauft</div>
+      <div class="kpi-val green" id="k-paid">–</div>
+      <div class="kpi-sub" id="k-paid-sub">– % Conversion</div>
+    </div>
+    <div class="kpi k-revenue">
+      <div class="kpi-label">Umsatz</div>
+      <div class="kpi-val crust" id="k-revenue">–</div>
+      <div class="kpi-sub">à 29 € netto</div>
+    </div>
+    <div class="kpi k-rating">
+      <div class="kpi-label">Ø Bewertung</div>
+      <div class="kpi-val green" id="k-rating">–</div>
+      <div class="kpi-sub" id="k-rating-sub">von 5 Sternen</div>
+    </div>
+    <div class="kpi k-fb">
+      <div class="kpi-label">Feedbacks</div>
+      <div class="kpi-val" id="k-fb">–</div>
+      <div class="kpi-sub" id="k-fb-sub">Survey-Antworten</div>
+    </div>
+  </div>
+
+  <div class="panel-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Alle Leads</div>
+        <div class="panel-count" id="leads-count">–</div>
+      </div>
+      <div id="leads-wrap"><div class="loading"><div class="spinner"></div> Lade …</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Feedback Survey</div>
+        <div class="panel-count" id="fb-count">–</div>
+      </div>
+      <div id="fb-wrap"><div class="loading"><div class="spinner"></div> Lade …</div></div>
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Conversion-Funnel</div>
+      </div>
+      <div id="funnel-wrap"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Kassensysteme der Leads</div>
+      </div>
+      <div id="kasse-wrap"><div class="loading"><div class="spinner"></div></div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var SUPA_URL = 'https://ysqzdqazcgyuzdorauiq.supabase.co';
+var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcXpkcWF6Y2d5dXpkb3JhdWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODM0NzcsImV4cCI6MjA5NTU1OTQ3N30.u5cbSVniUl5Zvlf2rdpnjtvDyKvv9csmPwvdtnEwWzE';
+
+var leads = [], feedbacks = [];
+
+function api(path) {
+  return fetch(SUPA_URL + '/rest/v1/' + path, {
+    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+  }).then(function(r) { return r.json(); });
+}
+
+function fmtDate(s) {
+  if (!s) return '–';
+  var d = new Date(s);
+  return d.toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit' }) + ' ' +
+    d.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+}
+function isToday(s) {
+  if (!s) return false;
+  return new Date(s).toDateString() === new Date().toDateString();
+}
+function stars(n) {
+  var s = '';
+  for (var i=1; i<=5; i++) s += '<span class="star ' + (i<=n?'on':'off') + '">★</span>';
+  return s;
+}
+
+function loadAll() {
+  document.getElementById('last-update').textContent = 'Lädt…';
+  Promise.all([
+    api('backki_leads?select=*&order=created_at.desc'),
+    api('backki_feedback?select=*&order=created_at.desc')
+  ]).then(function(res) {
+    leads     = Array.isArray(res[0]) ? res[0] : [];
+    feedbacks = Array.isArray(res[1]) ? res[1] : [];
+    renderKPIs(); renderLeads(); renderFeedback(); renderFunnel(); renderKasse();
+    document.getElementById('last-update').textContent =
+      new Date().toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  }).catch(function() {
+    document.getElementById('last-update').textContent = 'Fehler';
+  });
+}
+
+function renderKPIs() {
+  var total  = leads.length;
+  var today  = leads.filter(function(l){ return isToday(l.created_at); }).length;
+  var demo   = leads.filter(function(l){ return l.demo_opened; }).length;
+  var paid   = leads.filter(function(l){ return l.paid; }).length;
+  var ratings = feedbacks.filter(function(f){ return f.q1_gefallen; }).map(function(f){ return f.q1_gefallen; });
+  var avg    = ratings.length ? (ratings.reduce(function(a,b){return a+b;},0)/ratings.length).toFixed(1) : '–';
+
+  document.getElementById('k-leads').textContent     = total;
+  document.getElementById('k-leads-sub').textContent = today + ' heute neu';
+  document.getElementById('k-demo').textContent      = demo;
+  document.getElementById('k-demo-sub').textContent  = (total ? Math.round(demo/total*100) : 0) + ' % der Leads';
+  document.getElementById('k-paid').textContent      = paid;
+  document.getElementById('k-paid-sub').textContent  = (total ? Math.round(paid/total*100) : 0) + ' % Conversion';
+  document.getElementById('k-revenue').textContent   = (paid * 29).toLocaleString('de-DE') + ' €';
+  document.getElementById('k-rating').textContent    = avg;
+  document.getElementById('k-rating-sub').textContent = 'Ø aus ' + ratings.length + ' Bewertungen';
+  document.getElementById('k-fb').textContent        = feedbacks.length;
+  document.getElementById('k-fb-sub').textContent    = feedbacks.filter(function(f){return f.kommentar;}).length + ' mit Kommentar';
+}
+
+function renderLeads() {
+  document.getElementById('leads-count').textContent = leads.length + ' Einträge';
+  if (!leads.length) {
+    document.getElementById('leads-wrap').innerHTML =
+      '<div class="empty"><div class="empty-icon">🥐</div><div class="empty-text">Noch keine Leads — Landing Page live schalten!</div></div>';
+    return;
+  }
+  var rows = leads.map(function(l) {
+    var kasse = l.notes && l.notes.indexOf('Kasse:') === 0
+      ? '<span class="badge badge-blue">' + l.notes.replace('Kasse: ','') + '</span>'
+      : '<span style="color:var(--smoke)">–</span>';
+    var demo = l.demo_opened
+      ? '<span class="badge badge-green">✓ Demo</span>'
+      : '<span class="badge badge-smoke">–</span>';
+    var paid = l.paid
+      ? '<span class="badge badge-green">✓ ' + fmtDate(l.paid_at) + '</span>'
+      : '<span class="badge badge-amber">offen</span>';
+    return '<tr><td class="mono">' + fmtDate(l.created_at) + '</td>' +
+      '<td><b>' + (l.name||'–') + '</b></td>' +
+      '<td>' + (l.bakery||'–') + '</td>' +
+      '<td>' + kasse + '</td>' +
+      '<td>' + demo + '</td>' +
+      '<td>' + paid + '</td></tr>';
+  }).join('');
+  document.getElementById('leads-wrap').innerHTML =
+    '<table class="leads-table"><thead><tr>' +
+    '<th>Zeit</th><th>Name</th><th>Bäckerei</th><th>Kasse</th><th>Demo</th><th>Bezahlt</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function renderFeedback() {
+  document.getElementById('fb-count').textContent = feedbacks.length + ' Antworten';
+  if (!feedbacks.length) {
+    document.getElementById('fb-wrap').innerHTML =
+      '<div class="empty"><div class="empty-icon">💬</div><div class="empty-text">Noch kein Feedback — kommt nach ersten Demo-Nutzungen.</div></div>';
+    return;
+  }
+  var html = feedbacks.map(function(f) {
+    return '<div class="fb-item">' +
+      '<div class="fb-meta">' + fmtDate(f.created_at) + (f.email ? ' · ' + f.email : '') + '</div>' +
+      '<div style="display:flex;gap:20px;flex-wrap:wrap;">' +
+      '<div><div style="font-size:10px;color:var(--smoke);margin-bottom:2px">Gefallen</div><div class="fb-stars">' + stars(f.q1_gefallen||0) + '</div></div>' +
+      '<div><div style="font-size:10px;color:var(--smoke);margin-bottom:2px">Empfehlung</div><div class="fb-stars">' + stars(f.q3_empfehlen||0) + '</div></div>' +
+      '</div>' +
+      (f.q2_vorstellen ? '<div class="fb-answer">„' + f.q2_vorstellen + '"</div>' : '') +
+      (f.kommentar ? '<div class="fb-comment">' + f.kommentar + '</div>' : '') +
+      '</div>';
+  }).join('');
+  document.getElementById('fb-wrap').innerHTML = html;
+}
+
+function renderFunnel() {
+  var t = Math.max(leads.length, 1);
+  var demo = leads.filter(function(l){return l.demo_opened;}).length;
+  var paid = leads.filter(function(l){return l.paid;}).length;
+  var steps = [
+    { label: 'Leads erfasst',     n: leads.length,  pct: 100,                         color: 'var(--crust)' },
+    { label: 'Demo geöffnet',     n: demo,           pct: Math.round(demo/t*100),      color: 'var(--amber)' },
+    { label: 'Report gekauft',    n: paid,           pct: Math.round(paid/t*100),      color: 'var(--green)' },
+    { label: 'Feedback gegeben',  n: feedbacks.length, pct: Math.round(feedbacks.length/t*100), color: 'var(--blue)' },
+  ];
+  document.getElementById('funnel-wrap').innerHTML = steps.map(function(s) {
+    return '<div class="funnel-row">' +
+      '<div class="funnel-label">' + s.label + '</div>' +
+      '<div class="funnel-bar-wrap"><div class="funnel-bar"><div class="funnel-fill" style="width:' + s.pct + '%;background:' + s.color + '"></div></div></div>' +
+      '<div class="funnel-num" style="color:' + s.color + '">' + s.n + '</div>' +
+      '<div class="funnel-pct">' + s.pct + ' %</div></div>';
+  }).join('');
+}
+
+function renderKasse() {
+  var counts = {};
+  leads.forEach(function(l) {
+    var k = (l.notes && l.notes.indexOf('Kasse:') === 0) ? l.notes.replace('Kasse: ','').trim() : 'Nicht angegeben';
+    counts[k] = (counts[k]||0) + 1;
+  });
+  var entries = Object.keys(counts).map(function(k){return{name:k,n:counts[k]};}).sort(function(a,b){return b.n-a.n;});
+  if (!entries.length) {
+    document.getElementById('kasse-wrap').innerHTML =
+      '<div class="empty"><div class="empty-icon">🖥️</div><div class="empty-text">Noch keine Kassensystem-Angaben.</div></div>';
+    return;
+  }
+  var max = entries[0].n;
+  document.getElementById('kasse-wrap').innerHTML = entries.map(function(e) {
+    var pct = Math.round(e.n/max*100);
+    return '<div class="funnel-row">' +
+      '<div class="funnel-label">' + e.name + '</div>' +
+      '<div class="funnel-bar-wrap"><div class="funnel-bar"><div class="funnel-fill" style="width:' + pct + '%;background:var(--crust)"></div></div></div>' +
+      '<div class="funnel-num" style="color:var(--crust)">' + e.n + '</div>' +
+      '<div class="funnel-pct"></div></div>';
+  }).join('');
+}
+
+loadAll();
+setInterval(loadAll, 60000);
+</script>
+</body>
+</html>
