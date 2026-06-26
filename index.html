@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BackKI – Ihr Bäckerei-Analyse-Report für 29 €</title>
+<title>BackKI – Ihr Bäckerei-Analyse-Report für 29 € zzgl. MwSt.</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,900;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap');
 
@@ -60,7 +60,7 @@ nav {
 
 
 .scroll-hint {
-  position: absolute;
+  position: fixed;
   bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
@@ -73,6 +73,7 @@ nav {
   transition: opacity 0.2s;
   animation: bob 2s ease-in-out infinite;
   text-decoration: none;
+  z-index: 50;
 }
 .scroll-hint:hover { opacity: 1; }
 .scroll-hint-text {
@@ -663,7 +664,7 @@ footer {
 <!-- NAV -->
 <nav>
   <div class="nav-logo">Back<em>KI</em></div>
-  <a href="#report" class="nav-cta">Report für 29 € →</a>
+  <a href="#report" class="nav-cta">Report für 29 € zzgl. MwSt. →</a>
 </nav>
 
 <!-- HERO -->
@@ -679,7 +680,7 @@ footer {
     </a>
     <div class="hero-proof" style="margin-top:16px;">
         <div class="hero-proof-dot"></div>
-        <span>Einmalig 29 € · Kein Abo · Ergebnis in 24 Stunden</span>
+        <span>Einmalig 29 € zzgl. MwSt. · Kein Abo · Ergebnis in 24 Stunden</span>
       </div>
     </div>
 
@@ -717,7 +718,7 @@ footer {
         </div>
       </div>
 
-      <a href="#report" class="hc-cta">Meine Zahlen sehen — 29 €</a>
+      <a href="#report" class="hc-cta">Meine Zahlen sehen — 29 € zzgl. MwSt.</a>
       <div class="hc-note">Einmalig · Keine Kreditkarte nötig (PayPal / Überweisung)</div>
     </div>
   </div>
@@ -834,7 +835,7 @@ footer {
             <span class="rp-pct">15 %</span>
           </div>
           <div class="rp-blur-overlay">
-            <a href="#report" class="rp-unlock">Vollständig freischalten – 29 €</a>
+            <a href="#report" class="rp-unlock">Vollständig freischalten – 29 € zzgl. MwSt.</a>
           </div>
         </div>
         <div class="rp-recommendation">
@@ -885,7 +886,7 @@ footer {
             <li>Top-3 Sofort-Empfehlungen</li>
             <li>PDF-Report zum Ausdrucken</li>
           </ul>
-          <a href="#report" class="stair-btn btn-primary-sm">Report bestellen — 29 € →</a>
+          <a href="#report" class="stair-btn btn-primary-sm">Report bestellen — 29 € zzgl. MwSt. →</a>
         </div>
         <div class="stair-price">
           <div class="price-main highlight">29 €</div>
@@ -945,16 +946,16 @@ footer {
   <div class="container">
     <p class="eyebrow" style="text-align:center">Jetzt starten</p>
     <h2 class="section-h" style="text-align:center; max-width:480px; margin:0 auto 8px;">Ihr Report.<br>Ihre Zahlen. 24 Stunden.</h2>
-    <p class="section-sub" style="text-align:center; margin:0 auto 0;">Einfach E-Mail eintragen, 29 € bezahlen und Kassenexport hochladen. Wir machen den Rest.</p>
+    <p class="section-sub" style="text-align:center; margin:0 auto 0;">Einfach E-Mail eintragen, 29 € zzgl. gesetzl. MwSt. bezahlen und Kassenexport hochladen. Wir machen den Rest.</p>
 
     <div style="max-width:480px; margin:0 auto;">
       <div id="gate-form-wrap" class="gate-form" style="margin-top:40px;">
         <div class="gate-price-banner">
           <div>
             <div class="gpb-label">Analyse-Report</div>
-            <div class="gpb-note">Einmalig · Kein Abo</div>
+            <div class="gpb-note">Einmalig · Kein Abo · Netto</div>
           </div>
-          <div class="gpb-price">29 €</div>
+          <div class="gpb-price">29 € <span style="font-size:11px;font-weight:400;opacity:0.7">zzgl. MwSt.</span></div>
         </div>
 
         <div class="gate-field">
@@ -980,7 +981,7 @@ footer {
         </div>
 
         <button class="gate-submit" onclick="submitGate()">
-          Weiter zur Zahlung → 29 €
+          Weiter zur Zahlung → 29 € zzgl. MwSt.
         </button>
 
         <div class="gate-trust">
@@ -1022,7 +1023,7 @@ footer {
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">Muss ich danach ein Abo abschließen? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Nein. Der Report ist eine einmalige Leistung für 29 €. Sie entscheiden vollständig frei ob Sie danach die monatliche Bedarfsplanung nutzen möchten.</div>
+        <div class="faq-a">Nein. Der Report ist eine einmalige Leistung für 29 € zzgl. gesetzl. MwSt. Sie entscheiden vollständig frei ob Sie danach die monatliche Bedarfsplanung nutzen möchten.</div>
       </div>
       <div class="faq-item">
         <button class="faq-q" onclick="faq(this)">Was wenn ich kein Kassensystem habe? <span class="faq-arrow">+</span></button>
@@ -1049,6 +1050,15 @@ footer {
 // ── SUPABASE CONFIG ──
 var SUPA_URL = 'https://ysqzdqazcgyuzdorauiq.supabase.co';
 var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcXpkcWF6Y2d5dXpkb3JhdWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODM0NzcsImV4cCI6MjA5NTU1OTQ3N30.u5cbSVniUl5Zvlf2rdpnjtvDyKvv9csmPwvdtnEwWzE';
+
+// ── SCROLL-HINT AUSBLENDEN ──
+window.addEventListener('scroll', function() {
+  var hint = document.querySelector('.scroll-hint');
+  if (hint) {
+    hint.style.opacity = window.scrollY > 80 ? '0' : '0.6';
+    hint.style.pointerEvents = window.scrollY > 80 ? 'none' : 'auto';
+  }
+});
 
 // ── HERO-ZÄHLER ANIMATION ──
 var WASTE = [
@@ -1120,13 +1130,13 @@ function submitGate() {
     } catch(e) {
       alert('Fehler: ' + e.message + ' | Status: ' + xhr.status);
       btn.disabled = false;
-      btn.textContent = 'Weiter zur Zahlung → 29 €';
+      btn.textContent = 'Weiter zur Zahlung → 29 € zzgl. MwSt.';
     }
   };
   xhr.onerror = function() {
     alert('Netzwerkfehler. Bitte erneut versuchen.');
     btn.disabled = false;
-    btn.textContent = 'Weiter zur Zahlung → 29 €';
+    btn.textContent = 'Weiter zur Zahlung → 29 € zzgl. MwSt.';
   };
   xhr.send(JSON.stringify({
     email: email, name: name, bakery: bakery, kasse: kasse, lead_id: ''
