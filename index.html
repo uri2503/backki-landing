@@ -1097,36 +1097,40 @@ function submitGate() {
   var kasse  = (document.getElementById('g-kasse').value || '').trim();
   var gdpr   = document.getElementById('g-gdpr').checked;
 
-  if (!email || !email.includes('@')) { alert('Bitte geben Sie Ihre E-Mail-Adresse ein.'); return; }
-  if (!gdpr) { alert('Bitte stimmen Sie den Datenschutzhinweisen zu.'); return; }
+  if (!email || !email.includes('@')) { alert('Bitte E-Mail eingeben.'); return; }
+  if (!gdpr) { alert('Bitte Datenschutz bestätigen.'); return; }
 
   var btn = document.querySelector('.gate-submit');
   btn.disabled = true;
-  btn.textContent = 'Einen Moment …';
+  btn.textContent = 'Weiter zur Zahlung …';
 
-  // Direkt zur Edge Function — kein separater Supabase-Insert
-  btn.textContent = 'Weiter zur sicheren Zahlung …';
-  Promise.resolve()
-  .then(function() {
-    return fetch(SUPA_URL + '/functions/v1/backki-checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY },
-      body: JSON.stringify({
-        email: email, name: name, bakery: bakery, kasse: kasse, lead_id: ''
-      })
-    });
-  })
-  .then(function(r) { return r.json(); })
-  .then(function(data) {
-    if (data && data.url) { window.location.href = data.url; }
-    else { throw new Error(data.error || 'Unbekannter Fehler'); }
-  })
-  .catch(function(err) {
-    console.error('Checkout error:', err);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', SUPA_URL + '/functions/v1/backki-checkout', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('apikey', SUPA_KEY);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + SUPA_KEY);
+  xhr.onload = function() {
+    try {
+      var data = JSON.parse(xhr.responseText);
+      if (data && data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error(data.error || 'Kein URL');
+      }
+    } catch(e) {
+      alert('Fehler: ' + e.message + ' | Status: ' + xhr.status);
+      btn.disabled = false;
+      btn.textContent = 'Weiter zur Zahlung → 29 €';
+    }
+  };
+  xhr.onerror = function() {
+    alert('Netzwerkfehler. Bitte erneut versuchen.');
     btn.disabled = false;
     btn.textContent = 'Weiter zur Zahlung → 29 €';
-    alert('Ein Fehler ist aufgetreten. Bitte erneut versuchen oder schreiben Sie an report@backki.de');
-  });
+  };
+  xhr.send(JSON.stringify({
+    email: email, name: name, bakery: bakery, kasse: kasse, lead_id: ''
+  }));
 }
 
 // ── FAQ ──
