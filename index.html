@@ -3,1181 +3,296 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BackKI – Ihr Bäckerei-Analyse-Report für 29 € zzgl. MwSt.</title>
+<title>BackKI – Meine Bäckerei</title>
 <style>
-@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 300; font-display: swap; src: url('fraunces-300.woff2') format('woff2'); }
-@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 600; font-display: swap; src: url('fraunces-600.woff2') format('woff2'); }
-@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 700; font-display: swap; src: url('fraunces-700.woff2') format('woff2'); }
-@font-face { font-family: 'Fraunces'; font-style: normal; font-weight: 900; font-display: swap; src: url('fraunces-900.woff2') format('woff2'); }
-@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 300; font-display: swap; src: url('fraunces-300-italic.woff2') format('woff2'); }
-@font-face { font-family: 'Fraunces'; font-style: italic; font-weight: 400; font-display: swap; src: url('fraunces-400-italic.woff2') format('woff2'); }
-@font-face { font-family: 'Inter'; font-style: normal; font-weight: 300; font-display: swap; src: url('inter-300.woff2') format('woff2'); }
-@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap; src: url('inter-400.woff2') format('woff2'); }
-@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap; src: url('inter-500.woff2') format('woff2'); }
-@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap; src: url('inter-600.woff2') format('woff2'); }
-@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 400; font-display: swap; src: url('jetbrains-mono-400.woff2') format('woff2'); }
-@font-face { font-family: 'JetBrains Mono'; font-style: normal; font-weight: 600; font-display: swap; src: url('jetbrains-mono-600.woff2') format('woff2'); }
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1A120A;--crust:#B8722A;--crust-l:#D4903E;
+  --dough:#F9F3E8;--cream:#FDFAF4;--smoke:#7A6A58;
+  --border:#E4D8C4;--green:#2B6845;--green-l:#EBF5EF;
+  --red:#A82820;--white:#FFFFFF;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;background:var(--dough);color:var(--ink);}
+body{display:flex;flex-direction:column;min-height:100vh;}
+nav{background:rgba(26,18,10,0.97);padding:0 20px;height:56px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:#fff;}
+.nav-logo em{color:var(--crust);font-style:normal;}
+.nav-user{font-size:12px;color:rgba(255,255,255,0.45);font-weight:500;}
+main{flex:1;display:flex;flex-direction:column;padding:24px 20px 32px;max-width:480px;margin:0 auto;width:100%;gap:28px;}
+.greeting{display:flex;flex-direction:column;gap:4px;}
+.greeting-time{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--crust);}
+.greeting-name{font-family:'Fraunces',serif;font-size:26px;font-weight:900;color:var(--ink);line-height:1.1;}
+.greeting-sub{font-size:13px;color:var(--smoke);margin-top:2px;}
+.nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nav-btn{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-decoration:none;color:inherit;cursor:pointer;transition:border-color .2s,transform .15s,box-shadow .2s;position:relative;}
+.nav-btn:hover,.nav-btn:active{border-color:var(--crust);transform:translateY(-2px);box-shadow:0 6px 20px rgba(184,114,42,.12);}
+.nav-btn.primary{background:var(--ink);border-color:var(--ink);}
+.nav-btn.primary:hover{border-color:var(--crust);box-shadow:0 6px 20px rgba(26,18,10,.25);}
+.nav-btn.soon{opacity:.55;cursor:default;}
+.nav-btn.soon:hover{transform:none;box-shadow:none;border-color:var(--border);}
+.btn-icon{font-size:24px;line-height:1;}
+.btn-label{font-size:13px;font-weight:700;color:var(--ink);line-height:1.2;}
+.nav-btn.primary .btn-label{color:#fff;}
+.btn-sub{font-size:11px;color:var(--smoke);line-height:1.4;}
+.nav-btn.primary .btn-sub{color:rgba(255,255,255,.45);}
+.soon-badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;background:var(--border);color:var(--smoke);padding:2px 6px;border-radius:10px;}
+.mini-dash{background:var(--ink);border-radius:16px;padding:20px;}
+.mini-dash-title{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:16px;}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.mini-stat{display:flex;flex-direction:column;gap:4px;padding:0 16px;border-right:1px solid rgba(255,255,255,.08);}
+.mini-stat:first-child{padding-left:0;}
+.mini-stat:last-child{padding-right:0;border-right:none;}
+.mini-stat-val{font-family:'Fraunces',serif;font-size:22px;font-weight:900;line-height:1;}
+.mini-stat-val.red{color:#F87171;}
+.mini-stat-val.week{color:rgba(255,255,255,.7);}
+.mini-stat-label{font-size:10px;color:rgba(255,255,255,.3);font-weight:500;line-height:1.3;}
+.progress-wrap{margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,.08);}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.progress-label{font-size:11px;color:rgba(255,255,255,.45);font-weight:500;}
+.progress-pct{font-size:11px;font-weight:700;color:var(--crust-l);}
+.progress-bar{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.progress-fill{height:100%;background:var(--crust);border-radius:3px;transition:width .6s ease;}
+.progress-hint{font-size:11px;color:rgba(255,255,255,.3);line-height:1.4;}
+.empty-hint{background:var(--white);border:1.5px dashed var(--border);border-radius:12px;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.empty-hint-icon{font-size:20px;flex-shrink:0;}
+.empty-hint-text{font-size:13px;color:var(--smoke);line-height:1.5;}
+.empty-hint-text strong{color:var(--ink);font-weight:600;}
+.last-entry{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+.last-entry-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.last-entry-text{flex:1;font-size:13px;color:var(--smoke);}
+.last-entry-text strong{color:var(--ink);}
+.last-entry-val{font-family:'Fraunces',serif;font-size:18px;font-weight:900;color:var(--crust);}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --ink:     #1A120A;
-  --crust:   #B8722A;
-  --crust-l: #D4903E;
-  --dough:   #F9F3E8;
-  --cream:   #FDFAF4;
-  --smoke:   #7A6A58;
-  --border:  #E4D8C4;
-  --green:   #2B6845;
-  --red:     #A82820;
-}
-
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--cream);
-  color: var(--ink);
-  font-size: 15px;
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(26,18,10,0.96);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(184,114,42,0.2);
-  padding: 14px 32px;
-  display: flex; align-items: center;
-}
-.nav-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 900;
-  color: #fff; letter-spacing: -0.5px;
-}
-.nav-logo em { color: var(--crust); font-style: normal; }
-.nav-cta {
-  margin-left: auto;
-  background: var(--crust);
-  color: #fff;
-  padding: 9px 20px;
-  border-radius: 6px;
-  font-size: 13px; font-weight: 600;
-  text-decoration: none;
-  transition: background 0.2s;
-}
-.nav-cta:hover { background: var(--crust-l); }
-
-
-.scroll-hint {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: opacity 0.2s;
-  animation: bob 2s ease-in-out infinite;
-  text-decoration: none;
-  z-index: 50;
-}
-.scroll-hint:hover { opacity: 1; }
-.scroll-hint-text {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--crust);
-  white-space: nowrap;
-}
-.scroll-hint-arrow {
-  width: 28px; height: 28px;
-  border: 1.5px solid rgba(192,122,46,0.5);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px;
-  color: var(--crust);
-}
-@keyframes bob {
-  0%,100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(6px); }
-}
-
-/* ── HERO ── */
-.hero {
-  background: var(--ink);
-  padding: 120px 32px 80px;
-  min-height: 100vh;
-  display: flex; align-items: center;
-  position: relative; overflow: hidden;
-}
-.hero::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 50% at 70% 50%, rgba(184,114,42,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-.hero-inner {
-  max-width: 1060px; margin: 0 auto; width: 100%;
-  display: grid; grid-template-columns: 1fr 420px; gap: 64px; align-items: center;
-}
-.hero-tag {
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 2px;
-  color: var(--crust); margin-bottom: 20px;
-}
-.hero h1 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(34px, 5vw, 56px);
-  font-weight: 900; line-height: 1.08;
-  color: #fff; margin-bottom: 20px;
-}
-.hero h1 em { color: var(--crust); font-style: italic; }
-.hero-sub {
-  font-size: 16px; color: rgba(255,255,255,0.5);
-  max-width: 440px; line-height: 1.7; margin-bottom: 36px;
-}
-.hero-proof {
-  display: flex; align-items: center; gap: 16px;
-  font-size: 13px; color: rgba(255,255,255,0.35);
-}
-.hero-proof-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--crust); flex-shrink: 0;
-}
-
-/* ── HERO CARD (die Rechnung) ── */
-.hero-card {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(184,114,42,0.25);
-  border-radius: 16px;
-  padding: 28px;
-  position: relative; z-index: 1;
-}
-.hc-label {
-  font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  color: var(--crust); margin-bottom: 14px;
-}
-.hc-title {
-  font-family: 'Fraunces', serif;
-  font-size: 15px; color: rgba(255,255,255,0.5);
-  margin-bottom: 20px; font-style: italic;
-}
-.hc-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-}
-.hc-row:last-of-type { border-bottom: none; }
-.hc-product { font-size: 13px; color: rgba(255,255,255,0.6); }
-.hc-waste {
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 700;
-  color: #E05A4A;
-}
-.hc-divider {
-  height: 1px; background: rgba(184,114,42,0.3);
-  margin: 18px 0;
-}
-.hc-total-row {
-  display: flex; justify-content: space-between; align-items: baseline;
-}
-.hc-total-label { font-size: 12px; color: rgba(255,255,255,0.4); }
-.hc-total-val {
-  font-family: 'Fraunces', serif;
-  font-size: 32px; font-weight: 900; color: #E05A4A;
-  line-height: 1;
-}
-.hc-total-sub { font-size: 11px; color: rgba(255,255,255,0.25); text-align: right; margin-top: 3px; }
-.hc-cta {
-  display: block; width: 100%;
-  background: var(--crust);
-  color: #fff;
-  text-align: center;
-  padding: 14px;
-  border-radius: 10px;
-  font-size: 14px; font-weight: 700;
-  text-decoration: none;
-  margin-top: 20px;
-  border: none; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s, transform 0.15s;
-}
-.hc-cta:hover { background: var(--crust-l); transform: translateY(-1px); }
-.hc-note {
-  text-align: center;
-  font-size: 11px; color: rgba(255,255,255,0.2);
-  margin-top: 10px;
-}
-
-/* ── SECTIONS ── */
-.section { padding: 80px 32px; }
-.section-alt { background: var(--dough); }
-.container { max-width: 1060px; margin: 0 auto; }
-
-.eyebrow {
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 2px;
-  color: var(--crust); margin-bottom: 12px;
-}
-.section-h {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(26px, 3.5vw, 38px);
-  font-weight: 900; line-height: 1.1;
-  color: var(--ink); margin-bottom: 10px;
-}
-.section-sub {
-  font-size: 15px; color: var(--smoke);
-  max-width: 540px; line-height: 1.7;
-}
-
-/* ── PAIN NUMBERS ── */
-.pain-grid {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 20px; margin-top: 48px;
-}
-.pain-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 28px 24px;
-}
-.pain-num {
-  font-family: 'Fraunces', serif;
-  font-size: 48px; font-weight: 900;
-  color: var(--red); line-height: 1;
-  margin-bottom: 6px;
-}
-.pain-label {
-  font-size: 13px; font-weight: 600;
-  color: var(--ink); margin-bottom: 6px;
-}
-.pain-desc { font-size: 13px; color: var(--smoke); line-height: 1.6; }
-
-/* ── DIE TREPPE (Stufen) ── */
-.staircase {
-  display: flex; flex-direction: column;
-  gap: 0; margin-top: 52px;
-  position: relative;
-}
-.staircase::before {
-  content: '';
-  position: absolute;
-  left: 28px; top: 56px; bottom: 56px;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--border), var(--crust), var(--border));
-}
-.stair {
-  display: grid;
-  grid-template-columns: 56px 1fr auto;
-  gap: 24px; align-items: start;
-  padding: 32px 0;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-.stair:last-child { border-bottom: none; }
-.stair-num {
-  width: 56px; height: 56px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 900;
-  flex-shrink: 0;
-  position: relative; z-index: 1;
-}
-.stair-0 .stair-num { background: var(--dough); color: var(--smoke); border: 2px solid var(--border); }
-.stair-1 .stair-num { background: var(--ink); color: var(--crust); border: 2px solid var(--crust); }
-.stair-2 .stair-num { background: var(--crust); color: #fff; }
-.stair-3 .stair-num { background: var(--ink); color: #fff; }
-
-.stair-body {}
-.stair-tag {
-  font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  color: var(--smoke); margin-bottom: 6px;
-}
-.stair-title {
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 700;
-  color: var(--ink); margin-bottom: 8px;
-}
-.stair-desc { font-size: 14px; color: var(--smoke); line-height: 1.65; max-width: 520px; }
-.stair-features {
-  list-style: none; margin-top: 14px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.stair-features li {
-  font-size: 13px; color: var(--ink);
-  display: flex; align-items: flex-start; gap: 8px;
-}
-.stair-features li::before {
-  content: '✓'; color: var(--green);
-  font-weight: 700; flex-shrink: 0;
-}
-.stair-price {
-  text-align: right; flex-shrink: 0;
-  padding-top: 4px;
-}
-.price-main {
-  font-family: 'Fraunces', serif;
-  font-size: 36px; font-weight: 900;
-  color: var(--ink); line-height: 1;
-}
-.price-main.highlight { color: var(--crust); }
-.price-period { font-size: 12px; color: var(--smoke); margin-top: 2px; }
-.price-setup { font-size: 11px; color: var(--smoke); margin-top: 4px; }
-
-.stair-btn {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 13px; font-weight: 600;
-  text-decoration: none;
-  border: none; cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.2s;
-}
-.btn-ghost-sm {
-  background: transparent;
-  color: var(--smoke);
-  border: 1px solid var(--border);
-}
-.btn-ghost-sm:hover { border-color: var(--crust); color: var(--crust); }
-.btn-primary-sm {
-  background: var(--crust); color: #fff;
-}
-.btn-primary-sm:hover { background: var(--crust-l); }
-.btn-dark-sm {
-  background: var(--ink); color: #fff;
-}
-.btn-dark-sm:hover { background: #2c1e12; }
-
-/* ── WIE ES FUNKTIONIERT ── */
-.how-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 48px; margin-top: 52px; align-items: center;
-}
-.how-steps { display: flex; flex-direction: column; gap: 28px; }
-.how-step { display: flex; gap: 18px; align-items: flex-start; }
-.how-step-icon {
-  width: 44px; height: 44px; border-radius: 10px;
-  background: var(--ink); color: var(--crust);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.how-step-body h3 {
-  font-family: 'Fraunces', serif;
-  font-size: 17px; font-weight: 700;
-  color: var(--ink); margin-bottom: 4px;
-}
-.how-step-body p { font-size: 13px; color: var(--smoke); line-height: 1.65; }
-
-/* ── REPORT PREVIEW ── */
-.report-preview {
-  background: var(--ink);
-  border-radius: 16px;
-  padding: 28px;
-  border: 1px solid rgba(184,114,42,0.2);
-}
-.rp-header {
-  display: flex; justify-content: space-between;
-  align-items: flex-start; margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.rp-title {
-  font-family: 'Fraunces', serif;
-  font-size: 16px; font-weight: 700; color: #fff;
-}
-.rp-date { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 3px; }
-.rp-badge {
-  background: var(--crust);
-  color: #fff; font-size: 10px; font-weight: 700;
-  padding: 3px 10px; border-radius: 20px;
-  text-transform: uppercase; letter-spacing: 0.5px;
-}
-.rp-kpi-row {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-bottom: 20px;
-}
-.rp-kpi {
-  background: rgba(255,255,255,0.04);
-  border-radius: 10px; padding: 14px;
-}
-.rp-kpi-label { font-size: 10px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.5px; }
-.rp-kpi-val {
-  font-family: 'Fraunces', serif;
-  font-size: 26px; font-weight: 900;
-  line-height: 1; margin-top: 4px;
-}
-.rp-kpi-val.bad { color: #E05A4A; }
-.rp-kpi-val.good { color: #5DB87A; }
-.rp-kpi-val.neutral { color: #fff; }
-.rp-section-label {
-  font-size: 10px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1px;
-  color: rgba(255,255,255,0.3); margin-bottom: 10px;
-}
-.rp-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-}
-.rp-row:last-child { border-bottom: none; }
-.rp-product { font-size: 12px; color: rgba(255,255,255,0.6); }
-.rp-bar-wrap { flex: 1; margin: 0 12px; }
-.rp-bar {
-  height: 4px; border-radius: 2px;
-  background: rgba(255,255,255,0.08); overflow: hidden;
-}
-.rp-bar-fill { height: 100%; border-radius: 2px; background: #E05A4A; }
-.rp-pct {
-  font-size: 12px; font-weight: 600; color: #E05A4A;
-  width: 36px; text-align: right; flex-shrink: 0;
-}
-.rp-recommendation {
-  margin-top: 16px;
-  background: rgba(43,104,69,0.15);
-  border: 1px solid rgba(93,184,122,0.2);
-  border-radius: 10px; padding: 12px 14px;
-  font-size: 12px; color: rgba(255,255,255,0.6);
-  line-height: 1.6;
-}
-.rp-recommendation b { color: #5DB87A; }
-.rp-blur {
-  filter: blur(4px);
-  user-select: none;
-  pointer-events: none;
-  position: relative;
-}
-.rp-blur-overlay {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(26,18,10,0.5);
-  border-radius: 10px;
-}
-.rp-unlock {
-  background: var(--crust); color: #fff;
-  padding: 8px 16px; border-radius: 8px;
-  font-size: 12px; font-weight: 700;
-  text-decoration: none; white-space: nowrap;
-}
-
-/* ── UPLOAD-SECTION ── */
-.upload-box {
-  max-width: 600px; margin: 48px auto 0;
-  background: #fff;
-  border: 2px dashed var(--border);
-  border-radius: 16px;
-  padding: 40px 32px;
-  text-align: center;
-  transition: border-color 0.2s;
-  cursor: pointer;
-}
-.upload-box:hover { border-color: var(--crust); }
-.upload-icon { font-size: 40px; margin-bottom: 14px; }
-.upload-title {
-  font-family: 'Fraunces', serif;
-  font-size: 20px; font-weight: 700;
-  color: var(--ink); margin-bottom: 8px;
-}
-.upload-desc { font-size: 14px; color: var(--smoke); line-height: 1.65; margin-bottom: 24px; }
-.upload-btn {
-  display: inline-block;
-  background: var(--crust); color: #fff;
-  padding: 13px 28px; border-radius: 10px;
-  font-size: 14px; font-weight: 700;
-  text-decoration: none; border: none;
-  cursor: pointer; font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.upload-btn:hover { background: var(--crust-l); }
-.upload-hint { font-size: 11px; color: var(--smoke); margin-top: 12px; }
-
-/* ── GATE (E-Mail Capture) ── */
-.gate-wrap {
-  max-width: 480px; margin: 0 auto; text-align: center;
-}
-.gate-icon { font-size: 48px; margin-bottom: 16px; }
-.gate-title {
-  font-family: 'Fraunces', serif;
-  font-size: 28px; font-weight: 900;
-  color: var(--ink); margin-bottom: 10px;
-}
-.gate-sub { font-size: 15px; color: var(--smoke); margin-bottom: 32px; line-height: 1.7; }
-.gate-form {
-  background: #fff;
-  border: 1.5px solid var(--border);
-  border-radius: 16px; padding: 32px;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.06);
-}
-.gate-price-banner {
-  background: var(--ink);
-  border-radius: 10px; padding: 14px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 24px;
-}
-.gpb-label { font-size: 13px; color: rgba(255,255,255,0.6); }
-.gpb-price {
-  font-family: 'Fraunces', serif;
-  font-size: 28px; font-weight: 900; color: #fff;
-}
-.gpb-note { font-size: 11px; color: rgba(255,255,255,0.35); }
-.gate-field { margin-bottom: 14px; text-align: left; }
-.gate-label {
-  display: block; font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--ink); margin-bottom: 6px;
-}
-.gate-input {
-  width: 100%; padding: 11px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 8px; font-size: 14px;
-  color: var(--ink); background: var(--cream);
-  font-family: 'Inter', sans-serif;
-  outline: none; transition: border-color 0.2s;
-}
-.gate-input:focus { border-color: var(--crust); background: #fff; }
-.gate-check {
-  display: flex; gap: 10px; align-items: flex-start;
-  font-size: 12px; color: var(--smoke);
-  line-height: 1.5; text-align: left; margin: 14px 0 4px;
-}
-.gate-check input { margin-top: 2px; accent-color: var(--crust); flex-shrink: 0; }
-.gate-submit {
-  width: 100%; padding: 15px;
-  background: var(--crust); color: #fff;
-  border: none; border-radius: 10px;
-  font-size: 15px; font-weight: 700;
-  cursor: pointer; margin-top: 16px;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s, transform 0.15s;
-}
-.gate-submit:hover { background: var(--crust-l); transform: translateY(-1px); }
-.gate-trust {
-  display: flex; justify-content: center; gap: 20px;
-  margin-top: 20px; flex-wrap: wrap;
-}
-.gate-trust-item {
-  font-size: 11px; color: var(--smoke);
-  display: flex; align-items: center; gap: 5px;
-}
-
-/* Erfolg */
-.gate-success { display: none; text-align: center; padding: 20px 0; }
-.gate-success-icon { font-size: 56px; margin-bottom: 16px; }
-.gate-success h3 {
-  font-family: 'Fraunces', serif;
-  font-size: 24px; font-weight: 700;
-  color: var(--ink); margin-bottom: 8px;
-}
-.gate-success p { font-size: 14px; color: var(--smoke); line-height: 1.7; }
-.gate-demo-link {
-  display: inline-block; margin-top: 20px;
-  background: var(--green); color: #fff;
-  padding: 12px 24px; border-radius: 8px;
-  font-weight: 600; font-size: 14px;
-  text-decoration: none; transition: background 0.2s;
-}
-.gate-demo-link:hover { background: #1e5234; }
-
-/* ── FAQ ── */
-.faq-list { max-width: 680px; margin-top: 48px; }
-.faq-item { border-bottom: 1px solid var(--border); }
-.faq-q {
-  width: 100%; text-align: left;
-  padding: 18px 0;
-  font-size: 15px; font-weight: 600; color: var(--ink);
-  background: none; border: none; cursor: pointer;
-  display: flex; justify-content: space-between; align-items: center; gap: 12px;
-  font-family: 'Inter', sans-serif;
-}
-.faq-q:hover { color: var(--crust); }
-.faq-arrow { font-size: 20px; color: var(--crust); transition: transform 0.2s; flex-shrink: 0; }
-.faq-a {
-  max-height: 0; overflow: hidden;
-  font-size: 14px; color: var(--smoke); line-height: 1.7;
-  transition: max-height 0.3s ease, padding 0.3s;
-}
-.faq-item.open .faq-arrow { transform: rotate(45deg); }
-.faq-item.open .faq-a { max-height: 160px; padding-bottom: 18px; }
-
-/* ── FOOTER ── */
-footer {
-  background: var(--ink); padding: 40px 32px 28px;
-  border-top: 1px solid rgba(184,114,42,0.15);
-}
-.footer-inner {
-  max-width: 1060px; margin: 0 auto;
-  display: flex; flex-wrap: wrap;
-  justify-content: space-between; align-items: center; gap: 16px;
-}
-.footer-logo {
-  font-family: 'Fraunces', serif;
-  font-size: 18px; font-weight: 900; color: #fff;
-}
-.footer-logo em { color: var(--crust); font-style: normal; }
-.footer-links { display: flex; gap: 20px; }
-.footer-links a {
-  font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none;
-}
-.footer-links a:hover { color: rgba(255,255,255,0.6); }
-.footer-copy {
-  width: 100%; font-size: 12px; color: rgba(255,255,255,0.2);
-  padding-top: 20px; margin-top: 16px;
-  border-top: 1px solid rgba(255,255,255,0.06);
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
-  .pain-grid { grid-template-columns: 1fr; }
-  .how-grid { grid-template-columns: 1fr; }
-  .stair { grid-template-columns: 56px 1fr; }
-  .stair-price { display: none; }
-  nav { padding: 14px 20px; }
-  .section { padding: 60px 20px; }
-}
-
-.scroll-hint {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  cursor: pointer; text-decoration: none;
-  margin-top: 40px;
-  animation: bob 2s ease-in-out infinite;
-}
-.scroll-hint-text {
-  font-size: 11px; font-weight: 600;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  color: var(--crust); white-space: nowrap;
-}
-.scroll-hint-arrow {
-  width: 28px; height: 28px;
-  border: 1.5px solid rgba(192,122,46,0.5);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; color: var(--crust);
-}
-@keyframes bob {
-  0%,100% { transform: translateX(-50%) translateY(0); }
-  50%      { transform: translateX(-50%) translateY(7px); }
-}
-
+/* TOUR OVERLAY */
+.tour-overlay{display:none;position:fixed;inset:0;background:rgba(26,18,10,.6);z-index:300;align-items:flex-end;justify-content:center;}
+.tour-overlay.show{display:flex;}
+.tour-sheet{background:var(--white);border-radius:20px 20px 0 0;padding:28px 24px 40px;max-width:480px;width:100%;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.tour-step-dots{display:flex;gap:6px;justify-content:center;margin-bottom:20px;}
+.tour-dot{width:6px;height:6px;border-radius:50%;background:var(--border);}
+.tour-dot.aktiv{background:var(--crust);width:18px;border-radius:3px;}
+.tour-icon{font-size:40px;text-align:center;margin-bottom:12px;}
+.tour-title{font-family:'Fraunces',serif;font-size:20px;font-weight:900;color:var(--ink);text-align:center;margin-bottom:8px;}
+.tour-text{font-size:14px;color:var(--smoke);text-align:center;line-height:1.6;margin-bottom:24px;}
+.tour-btn{width:100%;background:var(--crust);color:white;border:none;border-radius:12px;padding:16px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;}
+.tour-btn:hover{background:var(--crust-l);}
+.tour-skip{display:block;text-align:center;margin-top:12px;font-size:12px;color:var(--smoke);cursor:pointer;background:none;border:none;font-family:'Inter',sans-serif;}
+.tour-skip:hover{color:var(--ink);}
 </style>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "585c4bc8ee6c435db1635e3274266d3b"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
-
-<!-- NAV -->
 <nav>
   <div class="nav-logo">Back<em>KI</em></div>
-  <a href="#report" class="nav-cta">Report für 29 € zzgl. MwSt. →</a>
+  <div class="nav-user" id="nav-user">Meine Bäckerei</div>
 </nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div>
-      <p class="hero-tag">Bäckerei-Analyse · Deutschland</p>
-      <h1>Wie viel wirft Ihre Bäckerei <em>wirklich</em> weg?</h1>
-      <p class="hero-sub">Wir analysieren Ihren Kassenexport und zeigen Ihnen in 24 Stunden schwarz auf weiß: welche Produkte Sie zu viel backen — und was das kostet.</p>
-      <a href="#problem" class="scroll-hint" style="margin-top:32px; justify-content:flex-start;">
-      <div class="scroll-hint-text">Lies die ganze Geschichte</div>
-      <div class="scroll-hint-arrow">↓</div>
+<main>
+  <div class="greeting">
+    <div class="greeting-time" id="greeting-time">Guten Morgen</div>
+    <div class="greeting-name" id="greeting-name">Meine Bäckerei.</div>
+    <div class="greeting-sub">Was möchten Sie heute tun?</div>
+  </div>
+  <div class="nav-grid">
+    <a href="tageserfassung.html" class="nav-btn primary">
+      <span class="btn-icon">✏️</span>
+      <div><div class="btn-label">Tages&shy;erfassung</div><div class="btn-sub">Retouren von heute eingeben</div></div>
     </a>
-    <div class="hero-proof" style="margin-top:16px;">
-        <div class="hero-proof-dot"></div>
-        <span>Einmalig 29 € zzgl. MwSt. · Kein Abo · Ergebnis in 24 Stunden</span>
-      </div>
-    </div>
-
-    <!-- Die Rechnung — das Herzstück -->
-    <div class="hero-card">
-      <div class="hc-label">Beispiel-Analyse · Bäckerei Müller</div>
-      <div class="hc-title">Ihre teuersten Wegwurf-Produkte</div>
-
-      <div class="hc-row">
-        <span class="hc-product">Croissant</span>
-        <span class="hc-waste" id="w1">–</span>
-      </div>
-      <div class="hc-row">
-        <span class="hc-product">Käsekuchen</span>
-        <span class="hc-waste" id="w2">–</span>
-      </div>
-      <div class="hc-row">
-        <span class="hc-product">Bel. Brötchen</span>
-        <span class="hc-waste" id="w3">–</span>
-      </div>
-      <div class="hc-row">
-        <span class="hc-product">Schwarzwälder</span>
-        <span class="hc-waste" id="w4">–</span>
-      </div>
-
-      <div class="hc-divider"></div>
-      <div class="hc-total-row">
-        <div>
-          <div class="hc-total-label">Jährlicher Wegwurf-Wert</div>
-          <div class="hc-total-sub">nur diese 4 Produkte</div>
-        </div>
-        <div style="text-align:right">
-          <div class="hc-total-val" id="w-total">–</div>
-          <div class="hc-total-sub">EUR / Jahr</div>
-        </div>
-      </div>
-
-      <a href="#report" class="hc-cta">Meine Zahlen sehen — 29 € zzgl. MwSt.</a>
-      <div class="hc-note">Einmalig · Keine Kreditkarte nötig (PayPal / Überweisung)</div>
+    <a href="backki-onboarding-typ1.html" class="nav-btn">
+      <span class="btn-icon">📋</span>
+      <div><div class="btn-label">Mein Sortiment</div><div class="btn-sub">Produkte &amp; Preise verwalten</div></div>
+    </a>
+    <a href="auswertung.html" class="nav-btn">
+      <span class="btn-icon">📊</span>
+      <div><div class="btn-label">Auswertung</div><div class="btn-sub">Verlust & Trends ansehen</div></div>
+    </a>
+    <div class="nav-btn soon">
+      <span class="soon-badge">Bald</span>
+      <span class="btn-icon">💡</span>
+      <div><div class="btn-label">Empfehlungen</div><div class="btn-sub">Verfügbar nach 28 Tagen</div></div>
     </div>
   </div>
-</section>
-
-<!-- SCHMERZ -->
-<section class="section" id="problem" style="scroll-margin-top: 70px;">
-  <div class="container">
-    <p class="eyebrow">Das Problem</p>
-    <h2 class="section-h">Jede Bäckerei hat es.<br>Kaum eine weiß wie teuer es ist.</h2>
-    <p class="section-sub">Ihre Kasse weiß jeden Tag genau was verkauft wurde. Diese Daten liegen ungenutzt. Wir lesen sie aus — und rechnen Ihnen vor was Sie das kostet.</p>
-    <div class="pain-grid">
-      <div class="pain-card">
-        <div class="pain-num">15 %</div>
-        <div class="pain-label">Wegwurf-Quote</div>
-        <div class="pain-desc">So viel landet im Schnitt täglich in der Tonne. Rohstoffe, Energie, Arbeitszeit — bezahlt und nicht verkauft.</div>
+  <div class="mini-dash">
+    <div class="mini-dash-title">Meine Zahlen</div>
+    <div class="mini-stats">
+      <div class="mini-stat">
+        <div class="mini-stat-val red" id="stat-gestern">—</div>
+        <div class="mini-stat-label">Verlust gestern</div>
       </div>
-      <div class="pain-card">
-        <div class="pain-num">60 T€</div>
-        <div class="pain-label">Verlust pro Filiale / Jahr</div>
-        <div class="pain-desc">So hoch ist der Warenwert der Retouren in einer durchschnittlichen Bäckerei-Filiale — hochgerechnet auf 12 Monate.</div>
-      </div>
-      <div class="pain-card">
-        <div class="pain-num">0 %</div>
-        <div class="pain-label">Nutzen der Kassendaten</div>
-        <div class="pain-desc">Nahezu kein Einzelbetrieb nutzt seine Verkaufsdaten für die Produktionsplanung des nächsten Tages.</div>
+      <div class="mini-stat">
+        <div class="mini-stat-val week" id="stat-woche">—</div>
+        <div class="mini-stat-label">Diese Woche</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- WIE ES FUNKTIONIERT -->
-<section class="section section-alt" id="wie" style="scroll-margin-top: 80px;">
-  <div class="container">
-    <p class="eyebrow">So einfach geht's</p>
-    <h2 class="section-h">Drei Schritte.<br>Kein IT-Aufwand.</h2>
-    <div class="how-grid">
-      <div class="how-steps">
-        <div class="how-step">
-          <div class="how-step-icon">📤</div>
-          <div class="how-step-body">
-            <h3>Kassenexport hochladen</h3>
-            <p>Exportieren Sie Ihre Verkaufsdaten aus Ihrer Kasse — das geht bei jeder modernen Kasse per Knopfdruck. Ihr Steuerberater kann das in 2 Minuten für Sie tun.</p>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-icon">🤖</div>
-          <div class="how-step-body">
-            <h3>KI analysiert Ihre Daten</h3>
-            <p>Unsere KI wertet Ihre Verkaufsdaten aus: Welche Produkte werden zu viel produziert? An welchen Wochentagen? Welche Monate sind am teuersten?</p>
-          </div>
-        </div>
-        <div class="how-step">
-          <div class="how-step-icon">📊</div>
-          <div class="how-step-body">
-            <h3>Report in 24 Stunden</h3>
-            <p>Sie erhalten einen klaren PDF-Report mit Ihren Top-Problemprodukten, dem jährlichen Verlustpotenzial und konkreten Reduktionsempfehlungen.</p>
-          </div>
-        </div>
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label" id="progress-label">0 von 28 Tagen</span>
+        <span class="progress-pct" id="progress-pct">0%</span>
       </div>
-
-      <!-- Report-Vorschau -->
-      <div class="report-preview">
-        <div class="rp-header">
-          <div>
-            <div class="rp-title">BackKI Analyse-Report</div>
-            <div class="rp-date">Bäckerei Müller · Juli 2026</div>
-          </div>
-          <div class="rp-badge">Beispiel</div>
-        </div>
-        <div class="rp-kpi-row">
-          <div class="rp-kpi">
-            <div class="rp-kpi-label">Retourenquote Ø</div>
-            <div class="rp-kpi-val bad">16,2 %</div>
-          </div>
-          <div class="rp-kpi">
-            <div class="rp-kpi-label">Jahresverlust</div>
-            <div class="rp-kpi-val bad">23.040 €</div>
-          </div>
-          <div class="rp-kpi">
-            <div class="rp-kpi-label">Einsparpotenzial</div>
-            <div class="rp-kpi-val good">7.500 €</div>
-          </div>
-          <div class="rp-kpi">
-            <div class="rp-kpi-label">Kritische Produkte</div>
-            <div class="rp-kpi-val neutral">6</div>
-          </div>
-        </div>
-        <div class="rp-section-label">Top-Problemprodukte</div>
-        <div class="rp-row">
-          <span class="rp-product">Käsekuchen</span>
-          <div class="rp-bar-wrap"><div class="rp-bar"><div class="rp-bar-fill" style="width:73%"></div></div></div>
-          <span class="rp-pct">22 %</span>
-        </div>
-        <div class="rp-row">
-          <span class="rp-product">Bel. Brötchen</span>
-          <div class="rp-bar-wrap"><div class="rp-bar"><div class="rp-bar-fill" style="width:83%"></div></div></div>
-          <span class="rp-pct">25 %</span>
-        </div>
-        <div class="rp-row">
-          <span class="rp-product">Croissant</span>
-          <div class="rp-bar-wrap"><div class="rp-bar"><div class="rp-bar-fill" style="width:67%"></div></div></div>
-          <span class="rp-pct">20 %</span>
-        </div>
-        <div style="position:relative; margin-top:4px;">
-          <div class="rp-row rp-blur">
-            <span class="rp-product">Schwarzwälder</span>
-            <div class="rp-bar-wrap"><div class="rp-bar"><div class="rp-bar-fill" style="width:57%"></div></div></div>
-            <span class="rp-pct">17 %</span>
-          </div>
-          <div class="rp-row rp-blur">
-            <span class="rp-product">Nusszopf</span>
-            <div class="rp-bar-wrap"><div class="rp-bar"><div class="rp-bar-fill" style="width:50%"></div></div></div>
-            <span class="rp-pct">15 %</span>
-          </div>
-          <div class="rp-blur-overlay">
-            <a href="#report" class="rp-unlock">Vollständig freischalten – 29 € zzgl. MwSt.</a>
-          </div>
-        </div>
-        <div class="rp-recommendation">
-          <b>Empfehlung:</b> Reduzieren Sie Croissant-Produktion um 8 Stück/Tag. Einsparung: <b>+1.680 € / Jahr</b>
-        </div>
-      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="progress-hint" id="progress-hint">Laden…</div>
     </div>
   </div>
-</section>
-
-<!-- DIE TREPPE -->
-<section class="section" id="preise">
-  <div class="container">
-    <p class="eyebrow">Ihr Weg mit BackKI</p>
-    <h2 class="section-h">Starten Sie wo Sie stehen.</h2>
-    <p class="section-sub">Kein Zwang. Kein Abo von Anfang an. Sie entscheiden nach dem ersten Report ob BackKI zu Ihrem Betrieb passt.</p>
-
-    <div class="staircase">
-
-      <div class="stair stair-0">
-        <div class="stair-num">0</div>
-        <div class="stair-body">
-          <div class="stair-tag">Kostenlos · Jetzt</div>
-          <div class="stair-title">Demo ausprobieren</div>
-          <div class="stair-desc">Sehen Sie BackKI in Aktion — mit einem fiktiven Musterbetrieb. Keine Anmeldung, keine Kreditkarte, keine Pflicht.</div>
-          <ul class="stair-features">
-            <li>Komplettes Dashboard mit Beispieldaten</li>
-            <li>Bedarfsplanung für 7 Tage</li>
-            <li>Einsparpotenzial-Rechner</li>
-          </ul>
-          <a href="https://uri2503.github.io/backki-app/demo.html" class="stair-btn btn-ghost-sm" target="_blank">Demo starten →</a>
-        </div>
-        <div class="stair-price">
-          <div class="price-main">0 €</div>
-          <div class="price-period">kostenlos</div>
-        </div>
-      </div>
-
-      <div class="stair stair-1">
-        <div class="stair-num">1</div>
-        <div class="stair-body">
-          <div class="stair-tag">Einmalig · Ihr erster Schritt</div>
-          <div class="stair-title">Analyse-Report Ihres Betriebs</div>
-          <div class="stair-desc">Sie laden einmalig Ihren Kassenexport hoch. Wir liefern Ihnen in 24 Stunden einen personalisierten Report mit Ihren echten Zahlen.</div>
-          <ul class="stair-features">
-            <li>Alle Ihre Problemprodukte mit Retouren-Quote</li>
-            <li>Jährlicher Verlustbetrag in Euro</li>
-            <li>Top-3 Sofort-Empfehlungen</li>
-            <li>PDF-Report zum Ausdrucken</li>
-          </ul>
-          <a href="#report" class="stair-btn btn-primary-sm">Report bestellen — 29 € zzgl. MwSt. →</a>
-        </div>
-        <div class="stair-price">
-          <div class="price-main highlight">29 €</div>
-          <div class="price-period">einmalig</div>
-          <div class="price-setup">kein Abo</div>
-        </div>
-      </div>
-
-      <div class="stair stair-2">
-        <div class="stair-num">2</div>
-        <div class="stair-body">
-          <div class="stair-tag">Monatlich · Nach dem Report</div>
-          <div class="stair-title">Tägliche Bedarfsplanung</div>
-          <div class="stair-desc">BackKI berechnet jeden Morgen automatisch Ihre optimale Backmenge — nach Wochentag, Wetter und Saison. Für 1 Standort.</div>
-          <ul class="stair-features">
-            <li>Tägliche Backliste für alle Produkte</li>
-            <li>Wochentag + Wetterintegration</li>
-            <li>Manuelle Anpassung möglich</li>
-            <li>Monatlich kündbar</li>
-          </ul>
-          <a href="#report" class="stair-btn btn-primary-sm">Nach Report freischalten — 49 €/Monat</a>
-        </div>
-        <div class="stair-price">
-          <div class="price-main">49 €</div>
-          <div class="price-period">/ Monat</div>
-          <div class="price-setup">+ 199 € Einrichtung</div>
-        </div>
-      </div>
-
-      <div class="stair stair-3">
-        <div class="stair-num">3</div>
-        <div class="stair-body">
-          <div class="stair-tag">Für wachsende Betriebe</div>
-          <div class="stair-title">Pro — bis 5 Standorte</div>
-          <div class="stair-desc">Filialvergleich, betriebswirtschaftliche Auswertung, Deckungsbeitragsanalyse. Für Bäcker die mit Zahlen führen wollen.</div>
-          <ul class="stair-features">
-            <li>Alles aus Stufe 2</li>
-            <li>Bis 5 Standorte + Benchmark-Vergleich</li>
-            <li>Deckungsbeitrag je Produkt</li>
-            <li>Monatsbericht für Steuerberater</li>
-          </ul>
-          <a href="#report" class="stair-btn btn-dark-sm">Anfragen — 79 €/Monat</a>
-        </div>
-        <div class="stair-price">
-          <div class="price-main">79 €</div>
-          <div class="price-period">/ Monat</div>
-          <div class="price-setup">+ 349 € Einrichtung</div>
-        </div>
-      </div>
-
-    </div>
+  <div class="last-entry" id="last-entry">
+    <div class="last-entry-dot"></div>
+    <div class="last-entry-text"><strong>Laden…</strong></div>
   </div>
-</section>
-
-<!-- UPLOAD / BESTELLEN -->
-<section class="section section-alt" id="report">
-  <div class="container">
-    <p class="eyebrow" style="text-align:center">Jetzt starten</p>
-    <h2 class="section-h" style="text-align:center; max-width:480px; margin:0 auto 8px;">Ihr Report.<br>Ihre Zahlen. 24 Stunden.</h2>
-    <p class="section-sub" style="text-align:center; margin:0 auto 0;">Einfach E-Mail eintragen, 29 € zzgl. gesetzl. MwSt. bezahlen und Kassenexport hochladen. Wir machen den Rest.</p>
-
-    <div style="max-width:480px; margin:0 auto;">
-      <div id="gate-form-wrap" class="gate-form" style="margin-top:40px;">
-        <div class="gate-price-banner">
-          <div>
-            <div class="gpb-label">Analyse-Report</div>
-            <div class="gpb-note">Einmalig · Kein Abo · Netto</div>
-          </div>
-          <div class="gpb-price">29 € <span style="font-size:11px;font-weight:400;opacity:0.7">zzgl. MwSt.</span></div>
-        </div>
-
-        <div class="gate-field">
-          <label class="gate-label">Ihr Name</label>
-          <input class="gate-input" type="text" id="g-name" placeholder="Thomas Müller">
-        </div>
-        <div class="gate-field">
-          <label class="gate-label">E-Mail-Adresse</label>
-          <input class="gate-input" type="email" id="g-email" placeholder="info@baeckerei-mueller.de">
-        </div>
-        <div class="gate-field">
-          <label class="gate-label">Name Ihrer Bäckerei</label>
-          <input class="gate-input" type="text" id="g-bakery" placeholder="Bäckerei Müller">
-        </div>
-        <div class="gate-field">
-          <label class="gate-label">Ihr Kassensystem <span style="font-weight:400; color:var(--smoke)">(optional)</span></label>
-          <input class="gate-input" type="text" id="g-kasse" placeholder="z. B. Vectron, ready2order, Tillhub …">
-        </div>
-
-        <div class="gate-check">
-          <input type="checkbox" id="g-gdpr">
-          <label for="g-gdpr">Ich stimme zu, dass BackKI meine Daten zur Erstellung des Analyse-Reports verarbeitet. Datenschutzhinweise beachtet.</label>
-        </div>
-
-        <button class="gate-submit" onclick="submitGate()">
-          Weiter zur Zahlung → 29 € zzgl. MwSt.
-        </button>
-
-        <div class="gate-trust">
-          <div class="gate-trust-item">🔒 Sichere Zahlung</div>
-          <div class="gate-trust-item">📅 Report in 24 Std.</div>
-          <div class="gate-trust-item">🇩🇪 Daten in Deutschland</div>
-        </div>
-      </div>
-
-      <div id="gate-success" class="gate-success" style="padding: 40px 0;">
-        <div class="gate-success-icon">✅</div>
-        <h3>Perfekt — fast geschafft!</h3>
-        <p>Wir haben Ihre Bestellung erhalten. Schicken Sie uns jetzt Ihren Kassenexport an:<br><br>
-        <strong style="color:var(--crust); font-size:16px;">report@backki.de</strong><br><br>
-        Ihr Report ist in <strong>24 Stunden</strong> in Ihrem Postfach. Möchten Sie in der Zwischenzeit die kostenlose Demo ausprobieren?</p>
-        <a href="https://uri2503.github.io/backki-app/demo.html" class="gate-demo-link" target="_blank">Kostenlose Demo öffnen →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="section">
-  <div class="container">
-    <p class="eyebrow">Häufige Fragen</p>
-    <h2 class="section-h">Was Bäcker uns fragen</h2>
-    <div class="faq-list">
-      <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Wie exportiere ich meine Kassendaten? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Bei den meisten modernen Kassensystemen gibt es einen "Export" oder "Auswertung"-Knopf im Menü — oft unter "Abschlüsse" oder "Berichte". Ihr Steuerberater hat diese Datei in der Regel bereits. Wir akzeptieren CSV, Excel und den DSFinV-K-Standard. Bei Fragen helfen wir per E-Mail.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Was passiert mit meinen Daten? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Ihre Verkaufsdaten werden ausschließlich für die Erstellung Ihres Reports verwendet und danach nicht gespeichert. Alle Daten liegen auf deutschen Servern. Keine Weitergabe an Dritte.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Wie lange braucht der Report? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Wir garantieren Ihren Report innerhalb von 24 Stunden nach Zahlungseingang und Datenübermittlung. In der Regel ist er schneller fertig.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Muss ich danach ein Abo abschließen? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Nein. Der Report ist eine einmalige Leistung für 29 € zzgl. gesetzl. MwSt. Sie entscheiden vollständig frei ob Sie danach die monatliche Bedarfsplanung nutzen möchten.</div>
-      </div>
-      <div class="faq-item">
-        <button class="faq-q" onclick="faq(this)">Was wenn ich kein Kassensystem habe? <span class="faq-arrow">+</span></button>
-        <div class="faq-a">Melden Sie sich trotzdem. Wir finden gemeinsam einen Weg — zum Beispiel über ein einfaches Aufschrieb-Sheet für die letzten 2-3 Wochen. Kontakt: report@backki.de</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-logo">Back<em>KI</em></div>
-    <div class="footer-links">
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
-      <a href="mailto:info@rc-digital.de">Kontakt</a>
-    </div>
-    <p class="footer-copy">© 2026 BackKI · Ein Produkt der Riedel Digital, Wernau · Alle Preise zzgl. MwSt.</p>
-  </div>
-</footer>
-
+</main>
 <script>
-// ── SUPABASE CONFIG ──
-var SUPA_URL = 'https://ysqzdqazcgyuzdorauiq.supabase.co';
-var SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcXpkcWF6Y2d5dXpkb3JhdWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODM0NzcsImV4cCI6MjA5NTU1OTQ3N30.u5cbSVniUl5Zvlf2rdpnjtvDyKvv9csmPwvdtnEwWzE';
+var SB_URL='https://ysqzdqazcgyuzdorauiq.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlzcXpkcWF6Y2d5dXpkb3JhdWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODM0NzcsImV4cCI6MjA5NTU1OTQ3N30.u5cbSVniUl5Zvlf2rdpnjtvDyKvv9csmPwvdtnEwWzE';
 
-// ── SCROLL-HINT AUSBLENDEN ──
-window.addEventListener('scroll', function() {
-  var hint = document.querySelector('.scroll-hint');
-  if (hint) {
-    hint.style.opacity = window.scrollY > 80 ? '0' : '0.6';
-    hint.style.pointerEvents = window.scrollY > 80 ? 'none' : 'auto';
-  }
-});
-
-// ── HERO-ZÄHLER ANIMATION ──
-var WASTE = [
-  { id:'w1', label:'Croissant',     eur: 1680 },
-  { id:'w2', label:'Käsekuchen',    eur: 2160 },
-  { id:'w3', label:'Bel. Brötchen', eur: 2700 },
-  { id:'w4', label:'Schwarzwälder', eur: 1440 }
-];
-var TOTAL = 7980;
-
-function animateNum(el, target, prefix, suffix, duration) {
-  prefix = prefix || '';
-  suffix = suffix || '';
-  duration = duration || 1200;
-  var start = 0;
-  var steps = 40;
-  var step = target / steps;
-  var interval = duration / steps;
-  var timer = setInterval(function() {
-    start += step;
-    if (start >= target) { start = target; clearInterval(timer); }
-    el.textContent = prefix + Math.round(start).toLocaleString('de-DE') + suffix;
-  }, interval);
-}
-
-window.addEventListener('load', function() {
-  setTimeout(function() {
-    WASTE.forEach(function(w, i) {
-      setTimeout(function() {
-        var el = document.getElementById(w.id);
-        if (el) animateNum(el, w.eur, '− ', ' €', 800);
-      }, i * 200);
+// ── TRACKING ──
+function track(event, meta) {
+  var bid = localStorage.getItem('backki_baeckerei_id') || null;
+  try {
+    fetch(SB_URL + '/rest/v1/backki_events', {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event: event, baeckerei_id: bid, meta: meta || {} })
     });
-    setTimeout(function() {
-      var tot = document.getElementById('w-total');
-      if (tot) animateNum(tot, TOTAL, '', ' €', 1000);
-    }, 1000);
-  }, 400);
-});
-
-// ── GATE SUBMIT ──
-function submitGate() {
-  var name   = (document.getElementById('g-name').value || '').trim();
-  var email  = (document.getElementById('g-email').value || '').trim();
-  var bakery = (document.getElementById('g-bakery').value || '').trim();
-  var kasse  = (document.getElementById('g-kasse').value || '').trim();
-  var gdpr   = document.getElementById('g-gdpr').checked;
-
-  if (!email || !email.includes('@')) { alert('Bitte E-Mail eingeben.'); return; }
-  if (!gdpr) { alert('Bitte Datenschutz bestätigen.'); return; }
-
-  var btn = document.querySelector('.gate-submit');
-  btn.disabled = true;
-  btn.textContent = 'Weiter zur Zahlung …';
-
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', SUPA_URL + '/functions/v1/backki-checkout', true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.setRequestHeader('apikey', SUPA_KEY);
-  xhr.setRequestHeader('Authorization', 'Bearer ' + SUPA_KEY);
-  xhr.onload = function() {
-    try {
-      var data = JSON.parse(xhr.responseText);
-      if (data && data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error(data.error || 'Kein URL');
-      }
-    } catch(e) {
-      alert('Fehler: ' + e.message + ' | Status: ' + xhr.status);
-      btn.disabled = false;
-      btn.textContent = 'Weiter zur Zahlung → 29 € zzgl. MwSt.';
-    }
-  };
-  xhr.onerror = function() {
-    alert('Netzwerkfehler. Bitte erneut versuchen.');
-    btn.disabled = false;
-    btn.textContent = 'Weiter zur Zahlung → 29 € zzgl. MwSt.';
-  };
-  xhr.send(JSON.stringify({
-    email: email, name: name, bakery: bakery, kasse: kasse, lead_id: ''
-  }));
+  } catch(e) {}  // Tracking darf nie crashen
 }
 
-// ── FAQ ──
-function faq(btn) {
-  var item = btn.parentElement;
-  var open = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('open'); });
-  if (!open) item.classList.add('open');
+function sbFetch(path,opts){return fetch(SB_URL+'/rest/v1/'+path,Object.assign({headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}},opts||{}));}
+function fmt(n){return n.toFixed(2).replace('.',',')+' €';}
+function getGreeting(){var h=new Date().getHours();return h<11?'Guten Morgen':h<14?'Guten Mittag':h<18?'Guten Nachmittag':'Guten Abend';}
+document.getElementById('greeting-time').textContent=getGreeting();
+
+async function laden(){
+  track('startseite_open');
+  var bid=localStorage.getItem('backki_baeckerei_id');
+  var name=localStorage.getItem('backki_baeckerei_name')||'Meine Bäckerei';
+  document.getElementById('nav-user').textContent=name;
+  document.getElementById('greeting-name').textContent=name+'.';
+  if(!bid){
+    // Kein Konto — direkt zu Onboarding umleiten
+    window.location.href = 'backki-onboarding-typ1.html';
+    return;
+  }
+  try{
+    var seit=new Date();seit.setDate(seit.getDate()-35);
+    var res=await sbFetch('backki_tageseintraege?baeckerei_id=eq.'+bid+'&datum=gte.'+seit.toISOString().slice(0,10)+'&select=datum,verlust_eur&order=datum.desc');
+    var rows=await res.json();
+    if(!rows||!rows.length){leer();return;}
+    var map={};
+    rows.forEach(function(r){if(!map[r.datum])map[r.datum]=0;map[r.datum]+=parseFloat(r.verlust_eur);});
+    var tage=Object.keys(map).sort().reverse();
+    // Gestern
+    var g=new Date();g.setDate(g.getDate()-1);var gs=g.toISOString().slice(0,10);
+    document.getElementById('stat-gestern').textContent=fmt(map[gs]||0);
+    // Woche
+    var h=new Date();var wb=new Date(h);wb.setDate(h.getDate()-h.getDay()+1);
+    var wbs=wb.toISOString().slice(0,10);var sw=0;
+    tage.forEach(function(d){if(d>=wbs)sw+=map[d];});
+    document.getElementById('stat-woche').textContent=fmt(sw);
+    // Fortschritt
+    var n=tage.length,ziel=28,pct=Math.min(Math.round(n/ziel*100),100);
+    document.getElementById('progress-fill').style.width=pct+'%';
+    document.getElementById('progress-pct').textContent=pct+'%';
+    var meilenstein=n<7?7:28;document.getElementById('progress-label').textContent=n+' von '+meilenstein+' Tagen — '+(n<7?'bis zu ersten Tipps':'vollständig kalibriert');
+    document.getElementById('progress-hint').textContent=n<5?'Noch '+(5-n)+' Tage bis zu ersten Tipps — täglich erfassen lohnt sich!':n<7?'Fast da — noch '+(7-n)+' Tag'+(7-n===1?'':'e')+' bis zu Ihren ersten BackKI-Tipps.':n<28?'💡 Erste Tipps verfügbar — Auswertung ansehen!':'✅ BackKI kennt Ihr Sortiment vollständig.';
+    // Letzter Eintrag
+    var lt=tage[0];var d=new Date(lt+'T12:00:00');
+    var tn=['So','Mo','Di','Mi','Do','Fr','Sa'];
+    document.getElementById('last-entry').innerHTML=
+      '<div class="last-entry-dot"></div>'+
+      '<div class="last-entry-text">Letzter Eintrag: <strong>'+tn[d.getDay()]+', '+d.getDate()+'.'+(d.getMonth()+1)+'.</strong></div>'+
+      '<div class="last-entry-val">'+fmt(map[lt])+'</div>';
+  }catch(e){leer();}
+  setTimeout(tourZeigen, 800);
+}
+function leer(){
+  document.getElementById('stat-gestern').textContent='—';
+  document.getElementById('stat-woche').textContent='—';
+  document.getElementById('progress-fill').style.width='0%';
+  document.getElementById('progress-pct').textContent='0%';
+  document.getElementById('progress-label').textContent='0 von 28 Tagen';
+  document.getElementById('progress-hint').textContent='Starten Sie mit der ersten Tageserfassung.';
+  document.getElementById('last-entry').innerHTML='<span class="empty-hint-icon">👋</span><div class="empty-hint-text"><strong>Noch keine Einträge.</strong><br>Starten Sie mit der ersten Tageserfassung.</div>';
+  document.getElementById('last-entry').className='empty-hint';
+}
+laden();
+
+// ── EINMALIGER TOUR-FLOW ──
+var TOUR_SCHRITTE = [
+  {
+    icon: '✏️',
+    title: 'Jeden Abend 2 Minuten',
+    text: 'Tippen Sie auf <strong>Tageserfassung</strong> und tragen Sie ein, was heute übrig geblieben ist. Das war's — BackKI rechnet alles automatisch.',
+    btn: 'Weiter →'
+  },
+  {
+    icon: '📊',
+    title: 'Ihr Verlust wird sichtbar',
+    text: 'BackKI zeigt Ihnen täglich wie viel Geld durch Retouren verloren geht — und erkennt nach 7 Tagen erste Muster.',
+    btn: 'Weiter →'
+  },
+  {
+    icon: '💡',
+    title: 'Nach 28 Tagen: KI-Empfehlungen',
+    text: 'BackKI analysiert Ihr Sortiment und gibt konkrete Empfehlungen — welche Mengen Sie reduzieren können, um Verluste zu senken.',
+    btn: 'Los geht's ✓'
+  }
+];
+var tourSchritt = 0;
+
+function tourZeigen() {
+  if (localStorage.getItem('backki_tour_done')) return;
+  // Nur zeigen wenn bereits mindestens 1 Eintrag vorhanden
+  var bid = localStorage.getItem('backki_baeckerei_id');
+  if (!bid) return;
+  document.getElementById('tour-overlay').classList.add('show');
+  tourRendern();
 }
 
-// ── SCROLL-REVEAL ──
-var observer = new IntersectionObserver(function(entries) {
-  entries.forEach(function(e) {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
+function tourRendern() {
+  var s = TOUR_SCHRITTE[tourSchritt];
+  document.getElementById('tour-icon').textContent = s.icon;
+  document.getElementById('tour-title').textContent = s.title;
+  document.getElementById('tour-text').innerHTML = s.text;
+  document.getElementById('tour-btn').textContent = s.btn;
+  for (var i = 0; i < 3; i++) {
+    document.getElementById('td-' + i).className = 'tour-dot' + (i === tourSchritt ? ' aktiv' : '');
+  }
+}
 
-document.querySelectorAll('.pain-card, .stair, .how-step').forEach(function(el) {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(20px)';
-  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-  observer.observe(el);
-});
+function tourWeiter() {
+  tourSchritt++;
+  if (tourSchritt >= TOUR_SCHRITTE.length) {
+    tourSchliessen();
+  } else {
+    tourRendern();
+  }
+}
+
+function tourSchliessen() {
+  localStorage.setItem('backki_tour_done', '1');
+  document.getElementById('tour-overlay').classList.remove('show');
+}
+
 </script>
+
+<!-- TOUR SHEET -->
+<div class="tour-overlay" id="tour-overlay">
+  <div class="tour-sheet">
+    <div class="tour-step-dots">
+      <div class="tour-dot aktiv" id="td-0"></div>
+      <div class="tour-dot" id="td-1"></div>
+      <div class="tour-dot" id="td-2"></div>
+    </div>
+    <div class="tour-icon" id="tour-icon">✏️</div>
+    <div class="tour-title" id="tour-title">Jeden Abend 2 Minuten</div>
+    <div class="tour-text" id="tour-text">Tippen Sie auf <strong>Tageserfassung</strong> und tragen Sie ein, was heute übrig geblieben ist. Das war's — BackKI rechnet alles automatisch.</div>
+    <button class="tour-btn" id="tour-btn" onclick="tourWeiter()">Weiter →</button>
+    <button class="tour-skip" onclick="tourSchliessen()">Überspringen</button>
+  </div>
+</div>
+
 </body>
 </html>
